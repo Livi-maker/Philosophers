@@ -36,7 +36,8 @@ typedef struct	s_philo
 typedef struct s_data
 {
 	struct s_fork	**forks;
-	pthread_mutex_t	*thinking;
+	pthread_mutex_t	*print;
+	pthread_mutex_t	*sleeping;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -49,6 +50,7 @@ struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data);
 void			create_fork(int q, t_data *data);
 struct s_fork	*new_mutex(pthread_mutex_t *mutex);
 void			*routine(void *data);
-void			try_to_eat(t_data *data, int id, int fork_available);
+void			try_to_eat(t_data *data, int id);
+void			thinking(t_data *data, int id);
 
 #endif
