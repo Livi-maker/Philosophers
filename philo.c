@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:20:47 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/17 12:53:47 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:37:04 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@ void	*routine(void *arg)
 	check_death(philo, data);
 	try_to_eat(philo, data, id);
 	check_death(philo, data);
-	pthread_mutex_lock(data->print);
-	printf("%.3ld %d is sleeping\n\n", time_passed(philo->start_time), id + 1);
-	pthread_mutex_unlock(data->print);
-	check_death_sleeping(philo, data);
-	usleep(data->time_to_sleep * 1000);
+	sleeping(data, philo, id);
 	check_death(philo, data);
 	if ((id % 2) == 1)
 	{
@@ -44,17 +40,19 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-void	set_data(t_data	*data, char **av, int q)
+void	set_data(t_data	*data)
 {
 	pthread_mutex_t	*print;
+	pthread_mutex_t	*death;
+	pthread_mutex_t	*variable;
 
 	print = malloc(sizeof(pthread_mutex_t));
-	data->q = q - 1;
-	data->time_to_die = atoi(av[2]);
-	data->time_to_eat = atoi(av[3]);
- 	data->time_to_sleep = atoi(av[4]);
+	death = calloc(1, sizeof(pthread_mutex_t));
+	variable = calloc(1, sizeof(pthread_mutex_t));
  	data->someone_died = 0;
 	data->print = print;
+	data->death = death;
+	data->variable = variable;
 }
 
 int main(int ac, char **av)
@@ -69,11 +67,15 @@ int main(int ac, char **av)
 		write(2, "Too few arguments\n", 18);
 		return (0);
 	}
+	else if (ac == 6)
+		data->min_meals = atoi(av[5]);
+	else if (ac == 5)
+		data->min_meals = -1;
 	q = atoi(av[1]);
-	set_data(data, av, q);
+	set_data(data);
 	create_fork(q, data);
-	create_philo(q, data);
-	while(data->someone_died == 0)
-	{}
+	create_philo(q, data, av);
+	while (data->someone_died == 0)
+		;
 	exit(1);
 }

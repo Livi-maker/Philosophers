@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:40:56 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/17 12:38:16 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:39:31 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	create_fork(int q, t_data *data)
 	data->forks = forks;
 }
 
-struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data)
+struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
 {
 	t_philo	*philo;
 	struct	timeval	*start;
@@ -47,7 +47,14 @@ struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data)
 	thread = calloc(1, sizeof(pthread_t));
 	philo = calloc(1, sizeof(t_philo));
 	philo->data = data;
-	philo->id = q - 1;
+	philo->id = id - 1;
+	pthread_mutex_lock(data->variable);
+	philo->q = atoi(av[1]) - 1;
+	philo->time_to_die = atoi(av[2]);
+	philo->time_to_eat = atoi(av[3]);
+ 	philo->time_to_sleep = atoi(av[4]);
+	philo->min_meals = data->min_meals;
+	pthread_mutex_unlock(data->variable);
 	pthread_create(thread, NULL, routine, philo);
 	philo->philo = thread;
 	philo->start_time = get_current_time();
@@ -55,7 +62,7 @@ struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data)
 	return(philo);
 }
 
-void	create_philo(int q, t_data *data)
+void	create_philo(int q, t_data *data, char **av)
 {
 	t_philo		*philo;
 	pthread_t	*thread;
@@ -63,7 +70,7 @@ void	create_philo(int q, t_data *data)
 	while (q > 0)
 	{
 
-		philo = new_philo(thread, q, data);
+		philo = new_philo(thread, q, data, av);
 		q--;
 	}
 }
