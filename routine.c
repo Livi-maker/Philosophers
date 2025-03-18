@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 18:07:41 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/18 20:41:44 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:24:46 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ void	try_to_eat(t_philo *philo, t_data *data, int id)
 	philo->eat_time = get_current_time();
 	pthread_mutex_unlock(data->print);
 	usleep(philo->time_to_eat * 1000);
+	philo->meals_eaten += 1;
+	pthread_mutex_lock(data->variable);
+	if (philo->meals_eaten == data->min_meals)
+		data->done_eating -= 1;
+	pthread_mutex_unlock(data->variable);
 	pthread_mutex_unlock(data->forks[id]->fork);
 	pthread_mutex_unlock(data->forks[fork_available]->fork);
 
@@ -68,7 +73,7 @@ void	check_death_sleeping(t_philo *philo, t_data *data)
 void	check_death(t_philo *philo, t_data *data)
 {
 	pthread_mutex_lock(data->death);
-	if (data->someone_died == 1)
+	if (data->someone_died == 1 || data->done_eating == 0)
 	{
 		pthread_mutex_unlock(data->death);
 		exit(0);

@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:40:56 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/18 15:39:31 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:23:30 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
 	philo = calloc(1, sizeof(t_philo));
 	philo->data = data;
 	philo->id = id - 1;
+	philo->meals_eaten = 0;
 	pthread_mutex_lock(data->variable);
 	philo->q = atoi(av[1]) - 1;
 	philo->time_to_die = atoi(av[2]);
 	philo->time_to_eat = atoi(av[3]);
  	philo->time_to_sleep = atoi(av[4]);
-	philo->min_meals = data->min_meals;
 	pthread_mutex_unlock(data->variable);
 	pthread_create(thread, NULL, routine, philo);
 	philo->philo = thread;

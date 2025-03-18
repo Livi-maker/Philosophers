@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:20:47 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/18 15:37:04 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:23:54 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-void	set_data(t_data	*data)
+void	set_data(t_data	*data, int q)
 {
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*death;
@@ -53,29 +53,30 @@ void	set_data(t_data	*data)
 	data->print = print;
 	data->death = death;
 	data->variable = variable;
+	data->done_eating = q;
 }
 
 int main(int ac, char **av)
 {
 	t_data			*data;
 	int				q;
-	pthread_mutex_t	*print;
 
-	data = calloc(1, sizeof(t_data));
 	if (ac < 5)
 	{
 		write(2, "Too few arguments\n", 18);
 		return (0);
 	}
-	else if (ac == 6)
+	data = calloc(1, sizeof(t_data));
+	if (ac >= 6)
 		data->min_meals = atoi(av[5]);
-	else if (ac == 5)
+	else
 		data->min_meals = -1;
 	q = atoi(av[1]);
-	set_data(data);
+	set_data(data, q);
 	create_fork(q, data);
 	create_philo(q, data, av);
 	while (data->someone_died == 0)
 		;
+	//destroy_data(data);i
 	exit(1);
 }

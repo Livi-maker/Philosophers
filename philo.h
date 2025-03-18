@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:17:52 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/03/18 20:02:24 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:18:26 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				q;
-	int				min_meals;
+	int				meals_eaten;
 	struct s_data	*data;
 	long int		start_time;
 	long int		eat_time;
@@ -49,6 +49,7 @@ typedef struct s_data
 	pthread_mutex_t	*variable;
 	int				someone_died;
 	int				min_meals;
+	int				done_eating;
 } t_data;
 
 void			create_philo(int q, t_data *data, char **av);
