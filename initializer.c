@@ -54,6 +54,8 @@ struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
 	philo->time_to_die = atoi(av[2]);
 	philo->time_to_eat = atoi(av[3]);
  	philo->time_to_sleep = atoi(av[4]);
+	philo->start_time = get_current_time();
+	philo->eat_time = philo->start_time;
 	pthread_mutex_unlock(data->variable);
 	pthread_create(thread, NULL, routine, philo);
 	data->philos[id - 1] = thread;

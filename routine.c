@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	try_to_eat(t_philo *philo, t_data *data, int id)
+int	try_to_eat(t_philo *philo, t_data *data, int id)
 {
 	int		fork_available;
 
@@ -20,31 +20,41 @@ void	try_to_eat(t_philo *philo, t_data *data, int id)
 		fork_available = philo->q;
 	else
 		fork_available = id - 1;
-	check_death_eating(philo, data);
+	/*pthread_mutex_lock(data->variable);
+	if (data->forks[fork_available]->state == 1 || data->forks[id]->state == 1)
+	{
+		pthread_mutex_unlock(data->variable);
+		return (0);
+	}*/
 	pthread_mutex_lock(data->forks[id]->fork);
-	check_death(philo, data);
+	data->forks[id]->state = 1;
+	if (data->forks[fork_available]->state == 1)
+	{
+		pthread_mutex_unlock(data->forks[id]->fork);
+		data->forks[id]->state = 0;
+		return (0);
+	}
+	pthread_mutex_lock(data->forks[fork_available]->fork);
+	pthread_mutex_lock(data->variable);
+	data->forks[fork_available]->state = 1;
+	pthread_mutex_unlock(data->variable);
 	pthread_mutex_lock(data->print);
 	printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
- 	pthread_mutex_unlock(data->print);
-	while (philo->q == 0)
-		check_death(philo, data);
-	pthread_mutex_lock(data->forks[fork_available]->fork);
-	check_death(philo, data);
-	pthread_mutex_lock(data->print);
 	printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
 	printf("%ld %d is eating\n\n", time_passed(philo->start_time), id + 1);
-	philo->eat_time = get_current_time();
 	pthread_mutex_unlock(data->print);
+	philo->eat_time = get_current_time();
 	usleep(philo->time_to_eat * 1000);
 	philo->meals_eaten += 1;
 	pthread_mutex_lock(data->variable);
 	if (philo->meals_eaten == data->min_meals)
 		data->done_eating -= 1;
-	pthread_mutex_unlock(data->variable);
 	pthread_mutex_unlock(data->forks[id]->fork);
 	pthread_mutex_unlock(data->forks[fork_available]->fork);
-
-
+	data->forks[id]->state = 0;
+	data->forks[fork_available]->state = 0;
+	pthread_mutex_unlock(data->variable);
+	return (1);
 }
 
 void	thinking(t_data *data, t_philo *philo)

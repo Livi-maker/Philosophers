@@ -14,23 +14,20 @@
 
 void	*routine(void *arg)
 {
-
 	t_data	*data;
 	t_philo	*philo;
 	int		id;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	philo->start_time = get_current_time();
-	philo->eat_time = philo->start_time;
 	id = philo->id;
 	check_death(philo, data);
 	if ((id % 2) == 0)
 	{
 		thinking(data, philo);
 	}
-	check_death(philo, data);
-	try_to_eat(philo, data, id);
+	while (try_to_eat(philo, data, id) == 0)
+		check_death(philo, data);
 	check_death(philo, data);
 	sleeping(data, philo, id);
 	check_death(philo, data);
