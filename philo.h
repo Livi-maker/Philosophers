@@ -50,6 +50,7 @@ typedef struct s_data
 	int				someone_died;
 	int				min_meals;
 	int				done_eating;
+	int				q;
 } t_data;
 
 void			create_philo(int q, t_data *data, char **av);
@@ -59,11 +60,13 @@ struct s_fork	*new_mutex(pthread_mutex_t *mutex);
 void			*routine(void *data);
 int				try_to_eat(t_philo *philo, t_data *data, int id);
 void			thinking(t_data *data, t_philo *philo);
-long int    	get_current_time();
+long int		get_current_time();
 long int		time_passed(long int time);
 void			check_death(t_philo *philo, t_data *data);
 void			check_death_sleeping(t_philo *philo, t_data *data);
 void			sleeping(t_data *data, t_philo *philo, int id);
-void			check_death_eating(t_philo *philo, t_data *data);
+void			destroy_data(t_data *data);
+void			destroy_philo(t_philo *philo);
+void			check_forks(t_philo *philo);
 
 #endif

@@ -80,4 +80,5 @@ void	create_philo(int q, t_data *data, char **av)
 		pthread_join(*(data->philos[nr - 1]), NULL);
 		nr--;
 	}
+	destroy_data(data);
 }

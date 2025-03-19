@@ -12,34 +12,6 @@
 
 #include "philo.h"
 
-void	*routine(void *arg)
-{
-	t_data	*data;
-	t_philo	*philo;
-	int		id;
-
-	philo = (t_philo *)arg;
-	data = philo->data;
-	id = philo->id;
-	check_death(philo, data);
-	if ((id % 2) == 0)
-	{
-		thinking(data, philo);
-	}
-	while (try_to_eat(philo, data, id) == 0)
-		check_death(philo, data);
-	check_death(philo, data);
-	sleeping(data, philo, id);
-	check_death(philo, data);
-	if ((id % 2) == 1)
-	{
-		thinking(data, philo);
-	}
-	check_death(philo, data);
-	routine(arg);
-	return (NULL);
-}
-
 void	set_data(t_data	*data, int q)
 {
 	pthread_mutex_t	*print;
@@ -47,6 +19,7 @@ void	set_data(t_data	*data, int q)
 	pthread_mutex_t	*variable;
 	pthread_t	**philos;
 
+	data->q = q;
 	print = calloc(1, sizeof(pthread_mutex_t));
 	death = calloc(1, sizeof(pthread_mutex_t));
 	variable = calloc(1, sizeof(pthread_mutex_t));
@@ -79,5 +52,4 @@ int main(int ac, char **av)
 	create_fork(q, data);
 	create_philo(q, data, av);
 	//destroy_data(data);
-	exit(1);
 }
