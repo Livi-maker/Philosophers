@@ -29,6 +29,7 @@ typedef struct	s_fork
 typedef struct	s_philo
 {
 	pthread_t		*philo;
+
 	int				id;
 	int				time_to_die;
 	int				time_to_eat;
@@ -43,6 +44,7 @@ typedef struct	s_philo
 typedef struct s_data
 {
 	struct s_fork	**forks;
+	pthread_t		**philos;
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*sleeping;
 	pthread_mutex_t	*death;

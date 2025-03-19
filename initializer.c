@@ -56,9 +56,7 @@ struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
  	philo->time_to_sleep = atoi(av[4]);
 	pthread_mutex_unlock(data->variable);
 	pthread_create(thread, NULL, routine, philo);
-	philo->philo = thread;
-	philo->start_time = get_current_time();
-	philo->eat_time = philo->start_time;
+	data->philos[id - 1] = thread;
 	return(philo);
 }
 
@@ -66,11 +64,18 @@ void	create_philo(int q, t_data *data, char **av)
 {
 	t_philo		*philo;
 	pthread_t	*thread;
+	int			nr;
 
+	nr = q;
 	while (q > 0)
 	{
-
+		data->philos[q - 1] = calloc(1, sizeof(pthread_t));
 		philo = new_philo(thread, q, data, av);
 		q--;
+	}
+	while (nr >= 0)
+	{
+		pthread_join(*(data->philos[nr - 1]), NULL);
+		nr--;
 	}
 }

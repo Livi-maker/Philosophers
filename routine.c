@@ -22,12 +22,14 @@ void	try_to_eat(t_philo *philo, t_data *data, int id)
 		fork_available = id - 1;
 	check_death_eating(philo, data);
 	pthread_mutex_lock(data->forks[id]->fork);
+	check_death(philo, data);
 	pthread_mutex_lock(data->print);
 	printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
  	pthread_mutex_unlock(data->print);
 	while (philo->q == 0)
 		check_death(philo, data);
 	pthread_mutex_lock(data->forks[fork_available]->fork);
+	check_death(philo, data);
 	pthread_mutex_lock(data->print);
 	printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
 	printf("%ld %d is eating\n\n", time_passed(philo->start_time), id + 1);
@@ -84,13 +86,15 @@ void	check_death(t_philo *philo, t_data *data)
 		pthread_mutex_lock(data->death);
 		if (data->someone_died == 0)
 		{
-			pthread_mutex_lock(data->print);
 			data->someone_died = 1;
+			pthread_mutex_unlock(data->death);
+			pthread_mutex_lock(data->print);
 			printf("%ld %d has died\n", time_passed(philo->start_time), (philo->id) + 1);
+			pthread_mutex_unlock(data->print);
+			exit (1);
 		}
 		pthread_mutex_unlock(data->death);
-		pthread_mutex_unlock(data->print);
- 		exit (1);
+
  	}
 }
 

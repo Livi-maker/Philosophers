@@ -14,12 +14,15 @@
 
 void	*routine(void *arg)
 {
+
 	t_data	*data;
 	t_philo	*philo;
 	int		id;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
+	philo->start_time = get_current_time();
+	philo->eat_time = philo->start_time;
 	id = philo->id;
 	check_death(philo, data);
 	if ((id % 2) == 0)
@@ -45,15 +48,18 @@ void	set_data(t_data	*data, int q)
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*death;
 	pthread_mutex_t	*variable;
+	pthread_t	**philos;
 
-	print = malloc(sizeof(pthread_mutex_t));
+	print = calloc(1, sizeof(pthread_mutex_t));
 	death = calloc(1, sizeof(pthread_mutex_t));
 	variable = calloc(1, sizeof(pthread_mutex_t));
+	philos = calloc(q, sizeof(pthread_t *));
  	data->someone_died = 0;
 	data->print = print;
 	data->death = death;
 	data->variable = variable;
 	data->done_eating = q;
+	data->philos = philos;
 }
 
 int main(int ac, char **av)
@@ -75,8 +81,6 @@ int main(int ac, char **av)
 	set_data(data, q);
 	create_fork(q, data);
 	create_philo(q, data, av);
-	while (data->someone_died == 0)
-		;
-	//destroy_data(data);i
+	//destroy_data(data);
 	exit(1);
 }
