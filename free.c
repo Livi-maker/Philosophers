@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/20 19:10:30 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/03/20 19:10:32 by ldei-sva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	destroy_data(t_data *data)
@@ -7,7 +19,7 @@ void	destroy_data(t_data *data)
 	i = 0;
 	while (i < data->q)
 	{
-		pthread_mutex_destroy(data->forks[i]->fork); 
+		pthread_mutex_destroy(data->forks[i]->fork);
 		free(data->forks[i]->fork);
 		free(data->forks[i]);
 		free(data->philos[i]);
@@ -26,7 +38,7 @@ void	destroy_data(t_data *data)
 
 void	destroy_philo(t_philo *philo)
 {
-	if(philo)
+	if (philo)
 		free(philo);
 }
 

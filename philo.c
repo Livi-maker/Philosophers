@@ -17,7 +17,7 @@ void	set_data(t_data	*data, int q)
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*death;
 	pthread_mutex_t	*variable;
-	pthread_t	**philos;
+	pthread_t		**philos;
 
 	data->q = q;
 	print = calloc(1, sizeof(pthread_mutex_t));
@@ -27,7 +27,7 @@ void	set_data(t_data	*data, int q)
 	pthread_mutex_init(print, NULL);
 	pthread_mutex_init(death, NULL);
 	pthread_mutex_init(variable, NULL);
- 	data->someone_died = 0;
+	data->someone_died = 0;
 	data->print = print;
 	data->death = death;
 	data->variable = variable;
@@ -35,7 +35,7 @@ void	set_data(t_data	*data, int q)
 	data->philos = philos;
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_data			*data;
 	int				q;
@@ -47,10 +47,10 @@ int main(int ac, char **av)
 	}
 	data = calloc(1, sizeof(t_data));
 	if (ac >= 6)
-		data->min_meals = atoi(av[5]);
+		data->min_meals = ft_atoi(av[5]);
 	else
 		data->min_meals = -1;
-	q = atoi(av[1]);
+	q = ft_atoi(av[1]);
 	set_data(data, q);
 	create_fork(q, data);
 	create_philo(q, data, av);

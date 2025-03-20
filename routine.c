@@ -21,15 +21,12 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	data = philo->data;
 	id = philo->id;
-
 	while (1)
 	{
+		if ((id % 2) == 0 && thinking(data, philo) == 1)
+			return (NULL);
 		if ((id % 2) == 0)
-		{
-			if (thinking(data, philo) == 1)
-				return (NULL);
 			usleep(1);
-		}
 		if (check_death(philo, data) == 1)
 			return (NULL);
 		while (try_to_eat(philo, data, id) == 0)
@@ -38,10 +35,8 @@ void	*routine(void *arg)
 		if (sleeping(data, philo, id))
 			return (NULL);
 		if ((id % 2) == 1)
-		{
 			if (thinking(data, philo) == 1)
 				return (NULL);
-		}
 	}
 	return (NULL);
 }
@@ -71,15 +66,21 @@ int	try_to_eat(t_philo *philo, t_data *data, int id)
 		data->forks[id]->state = 0;
 		return (0);
 	}
+	eat(data, philo, id, fork_available);
+	return (1);
+}
+
+void	eat(t_data *data, t_philo *philo, int id, int fork_available)
+{
 	pthread_mutex_lock(data->forks[fork_available]->fork);
 	pthread_mutex_lock(data->variable);
 	data->forks[fork_available]->state = 1;
 	if (data->someone_died == 0)
 	{
 		pthread_mutex_lock(data->print);
-		printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
-		printf("%ld %d has taken a fork\n", time_passed(philo->start_time), id + 1);
-		printf("%ld %d is eating\n\n", time_passed(philo->start_time), id + 1);
+		printf("%ld %d has taken a fork\n", time_passed(philo->start), id + 1);
+		printf("%ld %d has taken a fork\n", time_passed(philo->start), id + 1);
+		printf("%ld %d is eating\n\n", time_passed(philo->start), id + 1);
 		pthread_mutex_unlock(data->print);
 	}
 	pthread_mutex_unlock(data->variable);
@@ -94,7 +95,6 @@ int	try_to_eat(t_philo *philo, t_data *data, int id)
 	if (philo->meals_eaten == data->min_meals)
 		data->done_eating -= 1;
 	pthread_mutex_unlock(data->variable);
-	return (1);
 }
 
 int	thinking(t_data *data, t_philo *philo)
@@ -102,7 +102,8 @@ int	thinking(t_data *data, t_philo *philo)
 	if (check_death(philo, data) == 1)
 		return (1);
 	pthread_mutex_lock(data->print);
-	printf("%ld %d is thinking\n\n", time_passed(philo->start_time), (philo->id) + 1);
+	printf("%ld %d is thinking\n\n", \
+	time_passed(philo->start), (philo->id) + 1);
 	pthread_mutex_unlock(data->print);
 	return (0);
 }
@@ -112,7 +113,7 @@ int	sleeping(t_data *data, t_philo *philo, int id)
 	if (check_death(philo, data) == 1)
 		return (1);
 	pthread_mutex_lock(data->print);
-	printf("%ld %d is sleeping\n\n", time_passed(philo->start_time), id + 1);
+	printf("%ld %d is sleeping\n\n", time_passed(philo->start), id + 1);
 	pthread_mutex_unlock(data->print);
 	if (check_death_sleeping(philo, data) == 1)
 		return (1);

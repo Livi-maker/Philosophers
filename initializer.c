@@ -21,7 +21,7 @@ struct s_fork	*new_mutex(pthread_mutex_t *mutex)
 	pthread_mutex_init(mutex, NULL);
 	fork->fork = mutex;
 	fork->state = 0;
-	return(fork);
+	return (fork);
 }
 
 void	create_fork(int q, t_data *data)
@@ -41,8 +41,8 @@ void	create_fork(int q, t_data *data)
 
 struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
 {
-	t_philo	*philo;
-	struct	timeval	*start;
+	t_philo			*philo;
+	struct timeval	*start;
 
 	thread = calloc(1, sizeof(pthread_t));
 	philo = calloc(1, sizeof(t_philo));
@@ -50,16 +50,16 @@ struct s_philo	*new_philo(pthread_t *thread, int id, t_data *data, char **av)
 	philo->id = id - 1;
 	philo->meals_eaten = 0;
 	pthread_mutex_lock(data->variable);
-	philo->q = atoi(av[1]) - 1;
-	philo->time_to_die = atoi(av[2]);
-	philo->time_to_eat = atoi(av[3]);
- 	philo->time_to_sleep = atoi(av[4]);
-	philo->start_time = get_current_time();
-	philo->eat_time = philo->start_time;
+	philo->q = ft_atoi(av[1]) - 1;
+	philo->time_to_die = ft_atoi(av[2]);
+	philo->time_to_eat = ft_atoi(av[3]);
+	philo->time_to_sleep = ft_atoi(av[4]);
+	philo->start = get_current_time();
+	philo->eat_time = philo->start;
 	pthread_mutex_unlock(data->variable);
 	pthread_create(thread, NULL, routine, philo);
 	data->philos[id - 1] = thread;
-	return(philo);
+	return (philo);
 }
 
 void	create_philo(int q, t_data *data, char **av)

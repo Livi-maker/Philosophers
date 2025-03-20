@@ -20,13 +20,13 @@
 # include <pthread.h>
 # include <stdlib.h>
 
-typedef struct	s_fork
+typedef struct s_fork
 {
 	pthread_mutex_t	*fork;
 	int				state;
-} t_fork;
+}	t_fork;
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	struct s_data	*data;
 	int				id;
@@ -35,9 +35,9 @@ typedef struct	s_philo
 	int				time_to_sleep;
 	int				q;
 	int				meals_eaten;
-	long int		start_time;
+	long int		start;
 	long int		eat_time;
-} t_philo;
+}	t_philo;
 
 typedef struct s_data
 {
@@ -51,7 +51,7 @@ typedef struct s_data
 	int				min_meals;
 	int				done_eating;
 	int				q;
-} t_data;
+}	t_data;
 
 void			create_philo(int q, t_data *data, char **av);
 struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data, char **av);
@@ -60,7 +60,7 @@ struct s_fork	*new_mutex(pthread_mutex_t *mutex);
 void			*routine(void *data);
 int				try_to_eat(t_philo *philo, t_data *data, int id);
 int				thinking(t_data *data, t_philo *philo);
-long int		get_current_time();
+long int		get_current_time(void);
 long int		time_passed(long int time);
 int				check_death(t_philo *philo, t_data *data);
 int				check_death_sleeping(t_philo *philo, t_data *data);
@@ -68,5 +68,6 @@ int				sleeping(t_data *data, t_philo *philo, int id);
 void			destroy_data(t_data *data);
 void			destroy_philo(t_philo *philo);
 void			check_forks(t_philo *philo);
-
+void			eat(t_data *data, t_philo *philo, int id, int fork_available);
+int				ft_atoi(const char *nptr);
 #endif
