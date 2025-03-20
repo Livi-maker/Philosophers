@@ -24,6 +24,9 @@ void	set_data(t_data	*data, int q)
 	death = calloc(1, sizeof(pthread_mutex_t));
 	variable = calloc(1, sizeof(pthread_mutex_t));
 	philos = calloc(q, sizeof(pthread_t *));
+	pthread_mutex_init(print, NULL);
+	pthread_mutex_init(death, NULL);
+	pthread_mutex_init(variable, NULL);
  	data->someone_died = 0;
 	data->print = print;
 	data->death = death;
@@ -51,5 +54,5 @@ int main(int ac, char **av)
 	set_data(data, q);
 	create_fork(q, data);
 	create_philo(q, data, av);
-	//destroy_data(data);
+	destroy_data(data);
 }

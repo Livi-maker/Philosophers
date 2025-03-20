@@ -71,14 +71,12 @@ void	create_philo(int q, t_data *data, char **av)
 	nr = q;
 	while (q > 0)
 	{
-		data->philos[q - 1] = calloc(1, sizeof(pthread_t));
 		philo = new_philo(thread, q, data, av);
 		q--;
 	}
-	while (nr >= 0)
+	while (nr > 0)
 	{
 		pthread_join(*(data->philos[nr - 1]), NULL);
 		nr--;
 	}
-	destroy_data(data);
 }

@@ -7,20 +7,18 @@ void	destroy_data(t_data *data)
 	i = 0;
 	while (i < data->q)
 	{
-		pthread_mutex_destroy(data->forks[i]->fork);
+		pthread_mutex_destroy(data->forks[i]->fork); 
 		free(data->forks[i]->fork);
 		free(data->forks[i]);
 		free(data->philos[i]);
 		i++;
 	}
 	pthread_mutex_destroy(data->print);
-	pthread_mutex_destroy(data->sleeping);
 	pthread_mutex_destroy(data->death);
 	pthread_mutex_destroy(data->variable);
 	free(data->forks);
 	free(data->philos);
 	free(data->print);
-	free(data->sleeping);
 	free(data->death);
 	free(data->variable);
 	free(data);
@@ -28,7 +26,8 @@ void	destroy_data(t_data *data)
 
 void	destroy_philo(t_philo *philo)
 {
-	free(philo);
+	if(philo)
+		free(philo);
 }
 
 void	check_forks(t_philo *philo)

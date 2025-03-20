@@ -1,15 +1,17 @@
 #include "philo.h"
 
-void	check_death_sleeping(t_philo *philo, t_data *data)
+int	check_death_sleeping(t_philo *philo, t_data *data)
 {
 	if ((time_passed(philo->eat_time) + philo->time_to_sleep) >= philo->time_to_die)
 	{
-		while(1)
-			check_death(philo, data);
+		while (check_death(philo, data) == 0)
+			;
+		return (1);
 	}
+	return (0);
 }
 
-void	check_death(t_philo *philo, t_data *data)
+int	check_death(t_philo *philo, t_data *data)
 {
 	pthread_mutex_lock(data->death);
 	pthread_mutex_lock(data->variable);
@@ -19,7 +21,7 @@ void	check_death(t_philo *philo, t_data *data)
 		pthread_mutex_unlock(data->variable);
 		check_forks(philo);
 		destroy_philo(philo);
-		exit(0);
+		return (1);
 	}
 	pthread_mutex_unlock(data->death);
 	pthread_mutex_unlock(data->variable);
@@ -35,8 +37,9 @@ void	check_death(t_philo *philo, t_data *data)
 			pthread_mutex_unlock(data->print);
 			check_forks(philo);
 			destroy_philo(philo);
-			exit (0);
+			return (1);
 		}
 		pthread_mutex_unlock(data->variable);
  	}
+	return (0);
 }
