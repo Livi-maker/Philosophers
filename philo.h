@@ -54,7 +54,7 @@ typedef struct s_data
 }	t_data;
 
 void			create_philo(int q, t_data *data, char **av);
-struct s_philo	*new_philo(pthread_t *thread, int q, t_data *data, char **av);
+void			new_philo(pthread_t *thread, int q, t_data *data, char **av);
 void			create_fork(int q, t_data *data);
 struct s_fork	*new_mutex(pthread_mutex_t *mutex);
 void			*routine(void *data);
